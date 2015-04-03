@@ -11,6 +11,7 @@ class ButtonStoreDb implements ButtonStoreInterface {
 	public function __construct() {
 		$dbPath = $this->dbName;
 		$this->db = new SQLite3($dbPath);
+		$this->db->busyTimeout(100);
 		$this->db->exec('
 			CREATE TABLE IF NOT EXISTS button (
 				now integer,
