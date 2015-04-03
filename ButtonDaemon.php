@@ -49,7 +49,7 @@ class ButtonDaemon {
 		$hour = $ts[3];
 		$minute = $ts[4];
 		$second = $ts[5];
-		$now_timestamp = strtotime("$year-$month-$day $hour:$minute:$second");
+		$now_timestamp = strtotime("$year-$month-$day $hour:$minute:$second UTC");
 
 		$this->buttonStoreDb->insertButton($now_timestamp, $participants, $seconds_left);
 		$this->buttonStoreCsv->insertButton($now_timestamp, $participants, $seconds_left);

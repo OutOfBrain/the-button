@@ -41,7 +41,7 @@
 				var hour = ts[3];
 				var minute = ts[4];
 				var second = ts[5];
-				var now_timestamp = Date.parse(year+'-'+month+'-'+day+' '+hour+':'+minute+':'+second);
+				var now_timestamp = Date.parse(year+'-'+month+'-'+day+' '+hour+':'+minute+':'+second+' UTC');
 
 				plotData.push([now_timestamp, seconds_left]);
 				plot.setData([plotData]);
@@ -66,7 +66,10 @@
 
 						// * 1000 since milliseconds are used
 						if (i % 10 == 0) {
-							plotData.push([parseInt(elements[0]) * 1000, parseInt(elements[2])]);
+							plotData.push([
+								parseInt(elements[0]) * 1000,
+								parseInt(elements[2])
+							]);
 						}
 					}
 
