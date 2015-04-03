@@ -5,6 +5,7 @@
 
 	<div style="background-color:lightgray;display:inline-block;padding:15px 25px 15px 25px;margin-left:40px">
 		<label for="history">History:</label><input id="history" name="history" type="checkbox" checked />
+		<label for="allDataPoints">All Datapoints:</label><input id="allDataPoints" name="allDataPoints" type="checkbox" />
 	</div>
 
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
@@ -12,9 +13,12 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.time.js"></script>
 	<script type="text/javascript">
 		$(function() {
-			var plotData = [];  // the drawn plot data - combines historyData + liveData
+			var plotData = [];  // the drawn plot data - combines historyCompleteData + liveData
 			var liveData = [];  // data loaded from websocket since opening page
-			var historyData = [];  // historic data from server
+			var historyCompleteData = [];  // historic data from server
+			var historyFilteredData = [];  // history data from server - every Nth data point to prevent lag
+
+			var allDataPoints = false;  // flag to choose between the complete history and the filtered one
 
 			// setup plot
 			var plot = $.plot("#placeholder", [ plotData ], {
@@ -83,11 +87,11 @@
 						elements = lines[i].split(/,/);
 
 						// * 1000 since milliseconds are used
+						var now_timestamp = parseInt(elements[0]) * 1000;
+						var seconds_left = parseInt(elements[2]);
+						historyCompleteData.push([now_timestamp, seconds_left]);
 						if (i % 10 == 0) {
-							historyData.push([
-								parseInt(elements[0]) * 1000,
-								parseInt(elements[2])
-							]);
+							historyFilteredData.push([now_timestamp, seconds_left]);
 						}
 					}
 					toggleHistory(true);
@@ -102,7 +106,11 @@
 			 */
 			function toggleHistory(historyOn) {
 				if (historyOn) {
-					plotData = [].concat(historyData, liveData);
+					if (allDataPoints) {
+						plotData = [].concat(historyCompleteData, liveData);
+					} else {
+						plotData = [].concat(historyFilteredData, liveData);
+					}
 				} else {
 					plotData = liveData;
 				}
@@ -118,6 +126,12 @@
 					// without history
 					toggleHistory(false);
 				}
+			});
+
+			// listen history filter
+			$('#allDataPoints').change(function() {
+				allDataPoints = $(this).is(":checked");
+				toggleHistory(true);
 			});
 
 			// start the websocket connection
