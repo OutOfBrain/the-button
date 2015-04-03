@@ -9,12 +9,11 @@ require_once('vendor/autoload.php');
 class ButtonDaemon {
 	private $wsurl = 'wss://wss.redditmedia.com/thebutton?h=23479c7812ed86afdd50549e60eef640ccee380e&e=1428107042';
 
-	/** @var SQLite3 */
-	private $db;
-	private $dbName = 'button.db';
+	/** @var ButtonStore */
+	private $buttonStore;
 
 	public function run() {
-		$this->initDb();
+		$this->buttonStore = new ButtonStore();
 
 		$loop = Factory::create();
 
@@ -47,29 +46,7 @@ class ButtonDaemon {
 		$second = $ts[5];
 		$now_timestamp = strtotime("$year-$month-$day $hour:$minute:$second");
 
-		$this->insertNewData($now_timestamp, $participants, $seconds_left);
-	}
-
-	private function initDb() {
-		$dbPath = $this->dbName;
-		$this->db = new SQLite3($dbPath);
-		$this->db->exec('
-			CREATE TABLE IF NOT EXISTS button (
-				now integer,
-				participants integer,
-				seconds_left integer
-			)
-		');
-	}
-
-	private function insertNewData($now_timestamp, $participants, $seconds_left) {
-		$statement = $this->db->prepare('
-			INSERT INTO button (now, participants, seconds_left) VALUES (?, ?, ?)
-		');
-		$statement->bindValue(1, $now_timestamp);
-		$statement->bindValue(2, $participants);
-		$statement->bindValue(3, $seconds_left);
-		$statement->execute();
+		$this->buttonStore->insertButton($now_timestamp, $participants, $seconds_left);
 	}
 }
 
