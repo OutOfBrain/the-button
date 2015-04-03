@@ -6,8 +6,7 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.time.js"></script>
 	<script type="text/javascript">
-//		$(function() {
-
+		$(function() {
 			var plotData = [];
 
 			var plot = $.plot("#placeholder", [ plotData ], {
@@ -42,15 +41,37 @@
 				var second = ts[5];
 				var now_timestamp = Date.parse(year+'-'+month+'-'+day+' '+hour+':'+minute+':'+second);
 
-				plotData.push([now_timestamp, parseInt(second, 10)]);
+				plotData.push([now_timestamp, seconds_left]);
 				plot.setData([plotData]);
 				plot.setupGrid();
 				plot.draw();
 			}
 
+			// prepend csv data to the plot
+			$.ajax({
+				type: "GET",
+				url: "button.csv",
+				dataType: "text",
+				success: function(data) {
+					var lines = data.split(/\n/);
+					lines.shift();  // remove header
+					lines.pop();  // remove last line - is empty
+
+					var len = lines.length;
+					var elements = [];
+					for (var i = 0; i < len; ++i) {
+						elements = lines[i].split(/,/);
+
+						// * 1000 since milliseconds are used
+						plotData.push([parseInt(elements[0]) * 1000, parseInt(elements[2])]);
+					}
+				}
+			});
+
+			// start the websocket connection
 			var webSocket = new WebSocket('wss://wss.redditmedia.com/thebutton?h=5f2bc40bb2a4a316bf8069d7e0cbc664682630bd&e=1428104402');
 			webSocket.onmessage = update;
-//		});
+		});
 	</script>
 </body>
 </html>
