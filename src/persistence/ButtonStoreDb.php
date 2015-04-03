@@ -3,7 +3,7 @@ namespace Persistence;
 
 use SQLite3;
 
-class ButtonStore {
+class ButtonStoreDb implements ButtonStoreInterface {
 	/** @var SQLite3 */
 	private $db;
 	private $dbName = 'button.db';

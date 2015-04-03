@@ -1,7 +1,7 @@
 <?php
 
 use Devristo\Phpws\Messaging\WebSocketMessage;
-use Persistence\ButtonStore;
+use Persistence\ButtonStoreDb;
 use React\EventLoop\Factory;
 
 require_once('vendor/autoload.php');
@@ -10,11 +10,11 @@ require_once('vendor/autoload.php');
 class ButtonDaemon {
 	private $wsurl = 'wss://wss.redditmedia.com/thebutton?h=23479c7812ed86afdd50549e60eef640ccee380e&e=1428107042';
 
-	/** @var ButtonStore */
+	/** @var ButtonStoreDb */
 	private $buttonStore;
 
 	public function run() {
-		$this->buttonStore = new ButtonStore();
+		$this->buttonStore = new ButtonStoreDb();
 
 		$loop = Factory::create();
 
