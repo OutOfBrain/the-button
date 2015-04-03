@@ -7,7 +7,10 @@ use Persistence\ButtonStoreInterface;
 use React\EventLoop\Factory;
 
 require_once('vendor/autoload.php');
-
+// composer does not work live
+require_once('src/Persistence/ButtonStoreCsv.php');
+require_once('src/Persistence/ButtonStoreDb.php');
+require_once('src/Persistence/ButtonStoreInterface.php');
 
 class ButtonDaemon {
 	private $wsurl = 'wss://wss.redditmedia.com/thebutton?h=23479c7812ed86afdd50549e60eef640ccee380e&e=1428107042';
