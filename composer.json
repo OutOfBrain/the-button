@@ -1,0 +1,21 @@
+{
+  "name": "tcial/thebutton",
+  "description": "the button storage",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "OutOfBrain",
+      "email": "outofbrain@gmail.com"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/Devristo/phpws"
+    }
+  ],
+  "require": {
+    "devristo/phpws": "dev-master"
+  }
+}
