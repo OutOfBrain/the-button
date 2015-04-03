@@ -9,6 +9,11 @@
       "email": "outofbrain@gmail.com"
     }
   ],
+  "autoload": {
+    "psr-4": {
+      "": ""
+    }
+  },
   "repositories": [
     {
       "type": "vcs",
