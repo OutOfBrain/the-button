@@ -1,4 +1,7 @@
 <?php
+namespace Persistence;
+
+use SQLite3;
 
 class ButtonStore {
 	/** @var SQLite3 */

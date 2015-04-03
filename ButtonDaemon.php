@@ -1,6 +1,7 @@
 <?php
 
 use Devristo\Phpws\Messaging\WebSocketMessage;
+use Persistence\ButtonStore;
 use React\EventLoop\Factory;
 
 require_once('vendor/autoload.php');
