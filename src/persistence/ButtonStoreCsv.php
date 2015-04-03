@@ -5,7 +5,7 @@ namespace Persistence;
 
 
 class ButtonStoreCsv implements ButtonStoreInterface {
-	private $csvName = 'button.csv';
+	private $csvName = 'public/button.csv';
 
 	public function __construct() {
 		if (!file_exists($this->csvName)) {
