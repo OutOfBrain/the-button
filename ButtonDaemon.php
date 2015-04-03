@@ -63,7 +63,6 @@ class ButtonDaemon {
 	}
 
 	private function insertNewData($now_timestamp, $participants, $seconds_left) {
-		var_dump('insert data', $now_timestamp, $participants, $seconds_left);
 		$statement = $this->db->prepare('
 			INSERT INTO button (now, participants, seconds_left) VALUES (?, ?, ?)
 		');
@@ -71,7 +70,6 @@ class ButtonDaemon {
 		$statement->bindValue(2, $participants);
 		$statement->bindValue(3, $seconds_left);
 		$statement->execute();
-		var_dump($this->db->lastErrorMsg());
 	}
 }
 
