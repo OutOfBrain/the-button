@@ -55,7 +55,6 @@
 				url: "button.csv",
 				dataType: "text",
 				success: function(data) {
-					return; // tmp
 					var lines = data.split(/\n/);
 					lines.shift();  // remove header
 					lines.pop();  // remove last line - is empty
@@ -70,6 +69,8 @@
 							plotData.push([parseInt(elements[0]) * 1000, parseInt(elements[2])]);
 						}
 					}
+
+					$('#loading').hide();
 				}
 			});
 
