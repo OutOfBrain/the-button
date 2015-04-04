@@ -16,7 +16,7 @@ function noButton() {
 	if (isset($matches[1])) {
 		mlog('found new button url ' . $matches[1]);
 		$param = escapeshellarg($matches[1]);
-		var_dump(`nohup php ButtonDaemon.php $param &`);
+		var_dump(`nohup php ButtonDaemon.php $param > /dev/null &`);
 	} else {
 		mlog('found no new button url');
 	}
@@ -30,7 +30,7 @@ while (true) {
 		$button_was_down = true;
 	} elseif ($button_there && $button_was_down) {
 		// was down and is not anymore
-		mlog('button there agai =)');
+		mlog('button there again =)');
 		$button_was_down = false;
 	}
 	sleep(1);
