@@ -8,7 +8,6 @@ mlog('start watching');
 $button_was_down = false;
 while (true) {
 	$button_there = `ps aux | grep -v grep | grep ButtonDaemon.php`;
-	var_dump($button_there);
 	if (!$button_there && !$button_was_down) {
 		mlog('no button =( - sending mail');
 		mail('outofbrain@gmail.com', 'Button is down', 'again');
@@ -18,5 +17,5 @@ while (true) {
 		mlog('button there agai =)');
 		$button_was_down = true;
 	}
-	sleep(0.5);
+	sleep(1);
 }
