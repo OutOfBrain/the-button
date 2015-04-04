@@ -11,6 +11,13 @@ require_once('vendor/autoload.php');
 class ButtonDaemon {
 	private $wsurl = 'wss://wss.redditmedia.com/thebutton?h=558d8918247c277d5bbfc2dbcda2a6b315e7acfa&e=1428194517';
 
+
+	public function __construct($wsurl) {
+		if ($wsurl) {
+			$this->wsurl = $wsurl;
+		}
+	}
+
 	/** @var ButtonStoreInterface */
 	private $buttonStoreCsv;
 	/** @var ButtonStoreInterface */
@@ -56,4 +63,9 @@ class ButtonDaemon {
 	}
 }
 
-(new ButtonDaemon())->run();
+$wsurl = null;
+if (isset($argv[1])) {
+	$wsurl = $argv[1];
+}
+
+(new ButtonDaemon($wsurl))->run();
