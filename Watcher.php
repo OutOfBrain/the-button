@@ -15,7 +15,7 @@ while (true) {
 	} elseif ($button_there && $button_was_down) {
 		// was down and is not anymore
 		mlog('button there agai =)');
-		$button_was_down = true;
+		$button_was_down = false;
 	}
 	sleep(1);
 }
