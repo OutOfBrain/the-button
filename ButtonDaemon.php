@@ -9,7 +9,7 @@ use React\EventLoop\Factory;
 require_once('vendor/autoload.php');
 
 class ButtonDaemon {
-	private $wsurl = 'wss://wss.redditmedia.com/thebutton?h=23479c7812ed86afdd50549e60eef640ccee380e&e=1428107042';
+	private $wsurl = 'wss://wss.redditmedia.com/thebutton?h=558d8918247c277d5bbfc2dbcda2a6b315e7acfa&e=1428194517';
 
 	/** @var ButtonStoreInterface */
 	private $buttonStoreCsv;
