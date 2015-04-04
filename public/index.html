@@ -1,6 +1,6 @@
 <html>
 <body>
-	<h2>Button Countdown</h2>
+	<h2>Button Countdown <span id="counter"></span></h2>
 	<div id="loading" style="margin:50px;margin-left:150px">Loading - might take a few seconds</div>
 	<div id="placeholder" style="width:1000px;height:500px"></div>
 
@@ -69,6 +69,8 @@
 			var data = JSON.parse(event.data);
 			var seconds_left = data.payload.seconds_left;
 			var now_str = data.payload.now_str;
+
+			$('#counter').html(seconds_left);
 
 			var ts = now_str.split('-');
 			var year = ts[0];
