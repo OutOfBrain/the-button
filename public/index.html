@@ -30,6 +30,7 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.time.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.navigate.js"></script>
 	<script type="text/javascript">
 		var constFilterGroupTime = 60;
 		var constLimitLiveViewDataPoints = 600;
@@ -47,6 +48,10 @@
 			series: {
 				shadowSize: 0
 			},
+			grid: {
+				hoverable: true,
+				clickable: true
+			},
 			yaxis: {
 				min: 0,
 				max: 60
@@ -55,8 +60,39 @@
 				mode: "time",
 				timezone: "browser",
 				timeformat: "%Y-%m-%d %H:%m:%S"
+			},
+			zoom: {
+				interactive: true
+			},
+			pan: {
+				interactive: true
 			}
 		});
+
+		$("#placeholder").bind("plothover", function (event, pos, item) {
+console.log('hover');
+			var str = "(" + pos.x.toFixed(2) + ", " + pos.y.toFixed(2) + ")";
+			$("#hoverdata").text(str);
+
+			if (item) {
+				var x = item.datapoint[0];
+				var y = item.datapoint[1];
+
+				$("#tooltip").html(y + '<br>')
+					.css({top: item.pageY+5, left: item.pageX-23})
+					.fadeIn(200);
+			} else {
+				$("#tooltip").hide();
+			}
+		});
+		$("<div id='tooltip'></div>").css({
+			position: "absolute",
+			display: "none",
+			border: "1px solid #fdd",
+			padding: "2px",
+			"background-color": "#fee",
+			opacity: 0.80
+		}).appendTo("body");
 
 		/**
 		 * Called on websocket receive live data.
