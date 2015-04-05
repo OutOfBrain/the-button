@@ -1,14 +1,37 @@
 <html>
-<body>
 <!-- Feel free to fork at https://github.com/OutOfBrain/the-button/ ask a question or feature request or just drop me a mail: outofbrain@gmail.com -->
+<head>
+	<style>
+		body {
+			margin:0;
+			padding:30px;
+			-webkit-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.2) inset;
+			-moz-box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.2) inset;
+			box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.2) inset;
+			background-color: #fafafa;
+		}
+	</style>
+</head>
+<body>
 	<h2>Button Countdown <span id="counter"></span></h2>
+
+	<a href="https://github.com/OutOfBrain/the-button"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png"></a>
+
 	<div id="loading" style="margin:50px;margin-left:150px">Loading - might take a few seconds</div>
 	<div id="placeholder" style="width:1000px;height:500px"></div>
 
 	<div style="background-color:lightgray;display:inline-block;padding:15px 25px 15px 25px;margin-left:40px" title="Untick for live view">
-		<label for="history">Include History (grouped by minimum per 60 seconds):</label><input id="history" name="history" type="checkbox" checked />
+		<label for="history">Include History (grouped by minimum per <span id="sliderValue">60</span> seconds):</label>
+		<input id="history" name="history" type="checkbox" checked />
 		<!-- Why even bother -->
 		<!--<label for="allDataPoints">Include History All Datapoints (extremely slow):</label><input id="allDataPoints" name="allDataPoints" type="checkbox" />-->
+
+		<span id="range">
+			<br><br>
+			<input id="groupByRange" type="range" style="width:400px" value="60" min="0" max="2000" />
+			<br>
+			<label for="groupByRange">Seconds (careful with values < 60 - very slow rendering)</label>
+		</span>
 	</div>
 
 	<div style="padding:15px 25px 15px 40px">Data available here: <a href="button.csv">button.csv</a></div>
@@ -34,6 +57,17 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.time.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.navigate.min.js"></script>
 	<script type="text/javascript">
+
+		// slider code
+		$("#groupByRange").on("change mousemove", function() {
+			console.log('change ' + $(this).val());
+			$("#sliderValue").html($(this).val());
+		});
+		$("#groupByRange").on("mouseup", function() {
+			recalculateFilter($("#groupByRange").val());
+			toggleHistory(true);
+		});
+
 		var constFilterGroupTime = 60;  // only render the lowest data point every this many seconds
 		var constLimitLiveViewDataPoints = 600;  // limit the live view to this many data points
 
@@ -78,8 +112,9 @@
 			if (item) {
 				var x = item.datapoint[0];
 				var y = item.datapoint[1];
+				var date = new Date(x);
 
-				$("#tooltip").html(y + '<br>')
+				$("#tooltip").html(y + '<br>' + date.toLocaleString())
 					.css({top: item.pageY+5, left: item.pageX-23})
 					.fadeIn(200);
 			} else {
@@ -91,7 +126,7 @@
 			display: "none",
 			border: "1px solid #fdd",
 			padding: "2px",
-			"background-color": "#fee",
+			"background-color": "#FAFAFA",
 			opacity: 0.80
 		}).appendTo("body");
 
@@ -169,7 +204,7 @@
 		 * Prepares the filtered data for plotting.
 		 * Uses the full history as base.
 		 * Can be called from console to change the grouping
-		 * - just call flagShowHistory(true) after to force setting data and redraw.
+		 * - just call toggleHistory(true) after to force setting data and redraw.
 		 */
 		function recalculateFilter(groupBySeconds) {
 			historyFilteredData = [];
@@ -212,9 +247,11 @@
 			if($(this).is(":checked")) {
 				// with history
 				toggleHistory(true);
+				$("#range").show();
 			} else {
 				// without history
 				toggleHistory(false);
+				$("#range").hide();
 			}
 		});
 
