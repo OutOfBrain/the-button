@@ -7,7 +7,7 @@ View at http://tcial.org/the-button
 
 
 ## Running
-Requires PHP > 5.4
+Requires PHP >= 5.4
 
 Get the code
 
