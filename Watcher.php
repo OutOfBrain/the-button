@@ -1,4 +1,12 @@
 <?php
+/*
+ * Watches the ButtonDaemon.php
+ * Daemon gets watched in case it crashes or oom.
+ *
+ * In case the daemon is down:
+ *  - this watcher notifies the mail given in 'watcher_notify_mail.txt'
+ *  - tries to get a new ws url and tries to restart the daemon
+ */
 
 function mlog($msg) {
 	echo($msg.PHP_EOL);
@@ -6,8 +14,11 @@ function mlog($msg) {
 mlog('start watching');
 
 function noButton() {
-	mlog('no button =( - sending mail');
-	mail('outofbrain@gmail.com', 'Button is down', 'again');
+	$mail = file_get_contents('watcher_notify_mail.txt');
+	if ($mail) {
+		mlog('no button =( - sending mail');
+		mail($mail, 'Button is down', 'again');
+	}
 
 	// try to restart the button
 	$content = file_get_contents('http://www.reddit.com/r/thebutton/');

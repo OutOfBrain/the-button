@@ -1,5 +1,6 @@
 <html>
 <body>
+<!-- Feel free to fork at github/TODO ask a question or feature request or just drop me a mail: outofbrain@gmail.com -->
 	<h2>Button Countdown <span id="counter"></span></h2>
 	<div id="loading" style="margin:50px;margin-left:150px">Loading - might take a few seconds</div>
 	<div id="placeholder" style="width:1000px;height:500px"></div>
@@ -33,8 +34,8 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.time.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.navigate.min.js"></script>
 	<script type="text/javascript">
-		var constFilterGroupTime = 60;
-		var constLimitLiveViewDataPoints = 600;
+		var constFilterGroupTime = 60;  // only render the lowest data point every this many seconds
+		var constLimitLiveViewDataPoints = 600;  // limit the live view to this many data points
 
 		var plotData = [];  // the drawn plot data - combines historyCompleteData + liveData
 		var liveData = [];  // data loaded from websocket since opening page
@@ -101,7 +102,7 @@
 			if (event == undefined) {
 				return;
 			}
-//				{"type": "ticking", "payload": {"participants_text": "520,984", "tick_mac": "7e010014dd1d86ca7f8b76106b598a90db7429f5", "seconds_left": 59.0, "now_str": "2015-04-03-00-50-07"}}
+			// {"type": "ticking", "payload": {"participants_text": "520,984", "tick_mac": "7e010014dd1d86ca7f8b76106b598a90db7429f5", "seconds_left": 59.0, "now_str": "2015-04-03-00-50-07"}}
 			var data = JSON.parse(event.data);
 			var seconds_left = data.payload.seconds_left;
 			var now_str = data.payload.now_str;

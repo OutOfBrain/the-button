@@ -63,6 +63,7 @@ class ButtonDaemon {
 	}
 }
 
+// can be started with a ws url as parameter
 $wsurl = null;
 if (isset($argv[1])) {
 	$wsurl = $argv[1];
