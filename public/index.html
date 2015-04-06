@@ -10,6 +10,9 @@
 	<div id="placeholder"></div>
 
 	<div id="legend" title="Untick for live view">
+		<label for="flairColor">Flair color:</label>
+		<input id="flairColor" name="flairColor" type="checkbox" checked />
+		<br>
 		<label for="history">Include History (grouped by minimum per <span id="sliderValue">60</span> seconds):</label>
 		<input id="history" name="history" type="checkbox" checked />
 		<!-- Why even bother -->
@@ -58,11 +61,36 @@
 		var flagAllDataPoints = false;  // flag to choose between the complete history and the filtered one
 		var flagShowHistory = true;  // flag to display history or not
 
-		// setup plot
-		var plot = $.plot("#placeholder", [ plotData ], {
-			series: {
-				shadowSize: 0,
-				threshold: [
+		var plot = undefined;
+		function initPlot(withFlair) {
+			// setup plot
+			var options = {
+				series: {
+					shadowSize: 0
+				},
+				grid: {
+					hoverable: true,
+							clickable: true
+				},
+				yaxis: {
+					min: 0,
+							max: 60
+				},
+				xaxis: {
+					mode: "time",
+							timezone: "browser",
+							timeformat: "%Y-%m-%d %H:%m:%S"
+				},
+				zoom: {
+					interactive: true
+				},
+				pan: {
+					interactive: true
+				}
+			};
+
+			if (withFlair) {
+				options.series.threshold = [
 					{below: 60,color: "#820080"},
 					{below: 50,color: "#0083C7"},
 					{below: 40,color: "#02BE01"},
@@ -70,27 +98,11 @@
 					{below: 20,color: "#E59500"},
 					{below: 10,color: "#E50000"}
 				]
-			},
-			grid: {
-				hoverable: true,
-				clickable: true
-			},
-			yaxis: {
-				min: 0,
-				max: 60
-			},
-			xaxis: {
-				mode: "time",
-				timezone: "browser",
-				timeformat: "%Y-%m-%d %H:%m:%S"
-			},
-			zoom: {
-				interactive: true
-			},
-			pan: {
-				interactive: true
 			}
-		});
+
+			plot = $.plot("#placeholder", [ plotData ], options);
+		}
+		initPlot(true);
 
 		$("#placeholder").bind("plothover", function (event, pos, item) {
 			var str = "(" + pos.x.toFixed(2) + ", " + pos.y.toFixed(2) + ")";
@@ -255,6 +267,12 @@
 		$('#flagAllDataPoints').change(function() {
 			flagAllDataPoints = $(this).is(":checked");
 			toggleHistory(true);
+		});
+
+		// flair color toggle
+		$('#flairColor').change(function() {
+			var showFlair = $(this).is(":checked");
+			initPlot(showFlair);
 		});
 
 		var was_error = false;
