@@ -20,6 +20,7 @@ body {
 	background-color: lightgray;
 	display: inline-block;
 	padding: 15px 25px 15px 25px;
+	margin-bottom: 20px;
 	margin-left: 40px;
 }
 
@@ -27,6 +28,6 @@ body {
 	width:400px;
 }
 
-#dataAvailable {
+#dataAvailable, #codeAvailable {
 	padding:15px 25px 15px 40px;
 }
