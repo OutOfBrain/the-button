@@ -45,6 +45,7 @@
 .min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.time.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.navigate.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot.threshold.min.js"></script>
 	<script type="text/javascript">
 		var constFilterGroupTime = 60;  // only render the lowest data point every this many seconds
 		var constLimitLiveViewDataPoints = 600;  // limit the live view to this many data points
@@ -60,7 +61,15 @@
 		// setup plot
 		var plot = $.plot("#placeholder", [ plotData ], {
 			series: {
-				shadowSize: 0
+				shadowSize: 0,
+				threshold: [
+					{below: 60,color: "#820080"},
+					{below: 50,color: "#0083C7"},
+					{below: 40,color: "#02BE01"},
+					{below: 30,color: "#E5D900"},
+					{below: 20,color: "#E59500"},
+					{below: 10,color: "#E50000"}
+				]
 			},
 			grid: {
 				hoverable: true,
