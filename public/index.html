@@ -11,7 +11,7 @@
 
 	<div id="legend" title="Untick for live view">
 		<label for="flairColor">Flair color:</label>
-		<input id="flairColor" name="flairColor" type="checkbox" checked />
+		<input id="flairColor" name="flairColor" type="checkbox" />
 		<br>
 		<label for="history">Include History (grouped by minimum per <span id="sliderValue">60</span> seconds):</label>
 		<input id="history" name="history" type="checkbox" checked />
@@ -103,7 +103,7 @@
 
 			plot = $.plot("#placeholder", [ plotData ], options);
 		}
-		initPlot(true);
+		initPlot(false);
 
 		$("#placeholder").bind("plothover", function (event, pos, item) {
 			var str = "(" + pos.x.toFixed(2) + ", " + pos.y.toFixed(2) + ")";
