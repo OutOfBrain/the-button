@@ -255,6 +255,15 @@
 			webSocket.onmessage = update;
 			webSocket.onerror = function() {
 				was_error = true;
+
+				// try to refetch with backend provided ws url
+				$.get('getnewwsurl.php', function(data) {
+						if (data) {
+							initWebSocket(data);
+						}
+					}
+				);
+
 				// display fallback container:
 				$('#fallback_container').show();
 				$('#fallback_do').click(function(){
