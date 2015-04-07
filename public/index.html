@@ -29,21 +29,6 @@
 	<div id="dataAvailable">Data available here: <a href="button.csv">button.csv</a></div>
 	<div id="codeAvailable">Code available here: <a href="https://github.com/OutOfBrain/the-button">Code</a></div>
 
-	<div id="fallback_container" style="display:none">
-		<div>
-			<label for="fallback_url">Fallback URL:</label>
-			<input id="fallback_url" type="text" maxlength="120" />
-			<button id="fallback_do">Do It!</button>
-		</div>
-		<div>
-			How to?
-			<img src="http://i.imgur.com/aGBjsLR.png" />
-		</div>
-	</div>
-
-	<div id="fallback_success_container" style="display:none;color:green">Yay! that worked =)</div>
-
-
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/flot/0.8.3/jquery.flot
 .min.js"></script>
@@ -276,14 +261,11 @@
 			initPlot(showFlair);
 		});
 
-		var was_error = false;
 		function initWebSocket(url) {
 			// start the websocket connection
 			var webSocket = new WebSocket(url);
 			webSocket.onmessage = update;
 			webSocket.onerror = function() {
-				was_error = true;
-
 				// try to refetch with backend provided ws url
 				$.get('getnewwsurl.php', function(data) {
 						if (data) {
@@ -291,25 +273,9 @@
 						}
 					}
 				);
-
-				// display fallback container:
-				$('#fallback_container').show();
-				$('#fallback_do').click(function(){
-					var fallback_url = $('#fallback_url').val();
-					console.log("try again with " + fallback_url);
-					initWebSocket(fallback_url)
-				});
 			};
-
-			webSocket.onopen = function() {
-				if (was_error) {
-					was_error = false;
-					$('#fallback_container').hide();
-					$('#fallback_success_container').show();
-				}
-			}
 		}
-		initWebSocket('wss://wss.redditmedia.com/thebutton?h=5282bcc163ca3320e5682657e6ec26685d196deb&e=1428404530');
+		initWebSocket('wss://wss.redditmedia.com/thebutton?h=028c31feed150f7e2806cec3435f482e4c0e068c&e=1428514746');
 	</script>
 
 	<script>
