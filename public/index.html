@@ -5,6 +5,7 @@
 </head>
 <body>
 	<h2>Button Countdown <span id="counter"></span></h2>
+	<h3>Lowest Time has been:  <span id="lowest">calculating...</span></h3>
 
 	<div id="loading">Loading - might take a few seconds</div>
 	<div id="placeholder"></div>
@@ -43,6 +44,9 @@
 		var liveData = [];  // data loaded from websocket since opening page
 		var historyCompleteData = [];  // historic data from server
 		var historyFilteredData = [];  // history data from server
+
+		var lowestTime = 60;  // lowest found value
+		var lowestDate = new Date();  // lowest found date
 
 		var flagAllDataPoints = false;  // flag to choose between the complete history and the filtered one
 		var flagShowHistory = true;  // flag to display history or not
@@ -124,6 +128,16 @@
 			toggleHistory(true);
 		});
 
+		function updateLowest(value, date) {
+			if (value < lowestTime) {
+				lowestTime = value;
+				lowestDate = date;
+				var lowestSpan = $('#lowest');
+				lowestSpan.html(lowestTime + " seconds");
+				lowestSpan.prop('title', new Date(date).toLocaleString());
+			}
+		}
+
 		/**
 		 * Called on websocket receive live data.
 		 */
@@ -155,6 +169,7 @@
 				}
 			}
 			plotData.push([now_timestamp, seconds_left]);
+			updateLowest(seconds_left, now_timestamp);
 			refreshPlot();
 		}
 
@@ -186,6 +201,7 @@
 					var now_timestamp = parseInt(elements[0]) * 1000;
 					var seconds_left = parseInt(elements[2]);
 					historyCompleteData.push([now_timestamp, seconds_left]);
+					updateLowest(seconds_left, now_timestamp);
 				}
 				recalculateFilter(constFilterGroupTime);
 				toggleHistory(true);
