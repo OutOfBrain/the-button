@@ -165,15 +165,6 @@ var app = {
 		this.initGraph(false);
 		this.setupFlot();
 
-		// slider code
-		this.elements.groupByRange.on("change mousemove", function () {
-			$("#sliderValue").html($(this).val());
-		});
-		this.elements.groupByRange.on("mouseup", function () {
-			that.recalculateFilter($("#groupByRange").val());
-			that.toggleHistory(true);
-		});
-
 		// prepend csv data to the plot
 		$.ajax({
 			type: "GET",
@@ -202,6 +193,21 @@ var app = {
 			}
 		});
 
+		this.setupUi();
+		this.getNewUrl();
+	},
+
+	setupUi: function() {
+		var that = this;
+		// slider code
+		this.elements.groupByRange.on("change mousemove", function () {
+			$("#sliderValue").html($(this).val());
+		});
+		this.elements.groupByRange.on("mouseup", function () {
+			that.recalculateFilter($("#groupByRange").val());
+			that.toggleHistory(true);
+		});
+
 		// listen to history toggle change
 		this.elements.history.change(function () {
 			if ($(this).is(":checked")) {
@@ -220,8 +226,6 @@ var app = {
 			var showFlair = $(this).is(":checked");
 			that.initGraph(showFlair);
 		});
-
-		this.getNewUrl();
 	},
 
 	initGraph: function(withFlair) {
