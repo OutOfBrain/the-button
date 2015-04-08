@@ -173,8 +173,12 @@ var app = {
 		// listen to history toggle change
 		this.elements.history.change(function () {
 			if ($(this).is(":checked")) {
-				// with history
-				that.toggleHistory(true);
+				// with history - load if not present yet
+				if (that.historyCompleteData.length === 0) {
+					that.loadHistory();
+				} else {
+					that.toggleHistory(true);
+				}
 				$("#range").show();
 			} else {
 				// without history
@@ -232,6 +236,8 @@ var app = {
 	},
 
 	loadHistory: function() {
+		this.elements.loading.show();
+
 		var that = this;
 		// prepend csv data to the plot
 		$.ajax({
@@ -252,11 +258,10 @@ var app = {
 					var now_timestamp = parseInt(elements[0]) * 1000;
 					var seconds_left = parseInt(elements[2]);
 					that.historyCompleteData.push([now_timestamp, seconds_left]);
-					that.updateLowest(seconds_left, now_timestamp);
+					that.updateLowest(seconds_left, now_timestamp);  // TODO
 				}
 				that.recalculateFilter(that.constFilterGroupTime);
 				that.toggleHistory(true);
-
 				that.elements.loading.hide();
 			}
 		});
@@ -265,9 +270,6 @@ var app = {
 	start: function() {
 		this.initGraph(false);
 		this.setupFlot();
-
-		this.loadHistory();
-
 		this.setupUi();
 		this.getNewUrl();
 	}

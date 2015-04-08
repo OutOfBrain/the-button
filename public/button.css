@@ -9,6 +9,7 @@ body {
 
 #loading {
 	margin: 50px 50px 50px 150px;
+	display: none;
 }
 
 #placeholder {
@@ -30,4 +31,8 @@ body {
 
 #dataAvailable, #codeAvailable {
 	padding:15px 25px 15px 40px;
+}
+
+#range {
+	display: none
 }

@@ -10,18 +10,18 @@
 	<div id="loading">Loading - might take a few seconds</div>
 	<div id="placeholder"></div>
 
-	<div id="legend" title="Untick for live view">
+	<div id="legend">
+		<label for="history">Load History (~10Mb):</label>
+		<input id="history" name="history" type="checkbox" />
+		<br>
 		<label for="flairColor">Flair color:</label>
 		<input id="flairColor" name="flairColor" type="checkbox" />
-		<br>
-		<label for="history">Include History (grouped by minimum per <span id="sliderValue">60</span> seconds):</label>
-		<input id="history" name="history" type="checkbox" checked />
 
 		<span id="range">
 			<br><br>
 			<input id="groupByRange" type="range" value="60" min="0" max="2000" />
 			<br>
-			<label for="groupByRange">Seconds (careful with values < 60 - very slow rendering)</label>
+			<label for="groupByRange">Group history data points<span id="sliderValue">60</span> seconds(careful with values < 60 - very slow rendering)</label>
 		</span>
 	</div>
 
