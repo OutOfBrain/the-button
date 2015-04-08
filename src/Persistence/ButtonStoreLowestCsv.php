@@ -11,7 +11,8 @@ class ButtonStoreLowestCsv {
 	private $lowestTime = 0;
 
 	public function __construct(ButtonStoreInterface $buttonStore) {
-		foreach ($buttonStore->getAll() as list($nowTimestamp, $participants, $secondsLeft)) {
+		foreach ($buttonStore->getAll() as $line) {
+			list($nowTimestamp, $participants, $secondsLeft) = $line;
 			$this->checkLowest($nowTimestamp, $secondsLeft);
 		}
 
