@@ -12,7 +12,6 @@ var app = {
 	lowestTime: 60,  // lowest found value
 	lowestDate: new Date(),  // lowest found date
 
-	flagAllDataPoints: false,  // flag to choose between the complete history and the filtered one
 	flagShowHistory: true,  // flag to display history or not
 	/**
 	 * Redraw the graph.
@@ -29,11 +28,7 @@ var app = {
 	toggleHistory: function(historyOn) {
 		this.flagShowHistory = historyOn;  // just used to track history toggle state
 		if (historyOn) {
-			if (this.flagAllDataPoints) {
-				this.plotData = [].concat(this.historyCompleteData, this.liveData);
-			} else {
-				this.plotData = [].concat(this.historyFilteredData, this.liveData);
-			}
+			this.plotData = [].concat(this.historyFilteredData, this.liveData);
 		} else {
 			this.plotData = this.liveData;
 		}
@@ -75,7 +70,7 @@ var app = {
 		var now_timestamp = Date.parse(year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second + ' UTC');
 
 		that.liveData.push([now_timestamp, seconds_left]);
-		if (!that.flagShowHistory && !that.flagAllDataPoints) {
+		if (!that.flagShowHistory) {
 			// special case that we are just looking at the live view - limit the data points in that case
 			if (that.plotData.length > that.constLimitLiveViewDataPoints) {
 				that.plotData.shift();
@@ -205,12 +200,6 @@ var app = {
 				that.toggleHistory(false);
 				$("#range").hide();
 			}
-		});
-
-		// listen history filter
-		$('#flagAllDataPoints').change(function () {
-			that.flagAllDataPoints = $(this).is(":checked");
-			that.toggleHistory(true);
 		});
 
 		// flair color toggle
