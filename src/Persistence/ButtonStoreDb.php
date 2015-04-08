@@ -21,13 +21,13 @@ class ButtonStoreDb implements ButtonStoreInterface {
 		');
 	}
 
-	public function insertButton($now_timestamp, $participants, $seconds_left) {
+	public function insertButton($nowTimestamp, $participants, $secondsLeft) {
 		$statement = $this->db->prepare('
 			INSERT INTO button (now, participants, seconds_left) VALUES (?, ?, ?)
 		');
-		$statement->bindValue(1, $now_timestamp);
+		$statement->bindValue(1, $nowTimestamp);
 		$statement->bindValue(2, $participants);
-		$statement->bindValue(3, $seconds_left);
+		$statement->bindValue(3, $secondsLeft);
 		$statement->execute();
 	}
 

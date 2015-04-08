@@ -15,8 +15,8 @@ class ButtonStoreCsv implements ButtonStoreInterface {
 		}
 	}
 
-	public function insertButton($now_timestamp, $participants, $seconds_left) {
-		file_put_contents($this->csvName, "$now_timestamp,$participants,$seconds_left".PHP_EOL, FILE_APPEND);
+	public function insertButton($nowTimestamp, $participants, $secondsLeft) {
+		file_put_contents($this->csvName, "$nowTimestamp,$participants,$secondsLeft".PHP_EOL, FILE_APPEND);
 	}
 
 	public function getAll() {
@@ -25,6 +25,7 @@ class ButtonStoreCsv implements ButtonStoreInterface {
 			$line = explode(',', $line);
 		}
 		array_shift($lines);  // remove header
+		array_pop($lines);  // remove last line
 		return $lines;
 	}
 }
