@@ -20,10 +20,11 @@ class ButtonStoreCsv implements ButtonStoreInterface {
 	}
 
 	public function getAll() {
-		$lines = explode(PHP_EOL, file_get_contents($this->csvName));
+		$lines = explode("\n", file_get_contents($this->csvName));
 		foreach ($lines as &$line) {
 			$line = explode(',', $line);
 		}
+		array_shift($lines);  // remove header
 		return $lines;
 	}
 }
