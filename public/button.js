@@ -159,44 +159,6 @@ var app = {
 		}).appendTo("body");
 	},
 
-	start: function() {
-		var that = this;
-
-		this.initGraph(false);
-		this.setupFlot();
-
-		// prepend csv data to the plot
-		$.ajax({
-			type: "GET",
-			url: "button.csv",
-			dataType: "text",
-			success: function (data) {
-				var lines = data.split(/\n/);
-				lines.shift();  // remove header
-				lines.pop();  // remove last line - is empty
-
-				var len = lines.length;
-				var elements = [];
-				for (var i = 0; i < len; ++i) {
-					elements = lines[i].split(/,/);
-
-					// * 1000 since milliseconds are used
-					var now_timestamp = parseInt(elements[0]) * 1000;
-					var seconds_left = parseInt(elements[2]);
-					that.historyCompleteData.push([now_timestamp, seconds_left]);
-					that.updateLowest(seconds_left, now_timestamp);
-				}
-				that.recalculateFilter(that.constFilterGroupTime);
-				that.toggleHistory(true);
-
-				that.elements.loading.hide();
-			}
-		});
-
-		this.setupUi();
-		this.getNewUrl();
-	},
-
 	setupUi: function() {
 		var that = this;
 		// slider code
@@ -267,6 +229,44 @@ var app = {
 		}
 
 		this.plot = $.plot("#placeholder", [this.plotData], options);
+	},
+
+	start: function() {
+		var that = this;
+
+		this.initGraph(false);
+		this.setupFlot();
+
+		// prepend csv data to the plot
+		$.ajax({
+			type: "GET",
+			url: "button.csv",
+			dataType: "text",
+			success: function (data) {
+				var lines = data.split(/\n/);
+				lines.shift();  // remove header
+				lines.pop();  // remove last line - is empty
+
+				var len = lines.length;
+				var elements = [];
+				for (var i = 0; i < len; ++i) {
+					elements = lines[i].split(/,/);
+
+					// * 1000 since milliseconds are used
+					var now_timestamp = parseInt(elements[0]) * 1000;
+					var seconds_left = parseInt(elements[2]);
+					that.historyCompleteData.push([now_timestamp, seconds_left]);
+					that.updateLowest(seconds_left, now_timestamp);
+				}
+				that.recalculateFilter(that.constFilterGroupTime);
+				that.toggleHistory(true);
+
+				that.elements.loading.hide();
+			}
+		});
+
+		this.setupUi();
+		this.getNewUrl();
 	}
 };
 
