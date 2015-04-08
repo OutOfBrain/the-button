@@ -231,12 +231,8 @@ var app = {
 		this.plot = $.plot("#placeholder", [this.plotData], options);
 	},
 
-	start: function() {
+	loadHistory: function() {
 		var that = this;
-
-		this.initGraph(false);
-		this.setupFlot();
-
 		// prepend csv data to the plot
 		$.ajax({
 			type: "GET",
@@ -264,6 +260,13 @@ var app = {
 				that.elements.loading.hide();
 			}
 		});
+	},
+
+	start: function() {
+		this.initGraph(false);
+		this.setupFlot();
+
+		this.loadHistory();
 
 		this.setupUi();
 		this.getNewUrl();
