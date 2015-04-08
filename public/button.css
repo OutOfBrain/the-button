@@ -30,9 +30,15 @@ body {
 }
 
 #dataAvailable, #codeAvailable {
-	padding:15px 25px 15px 40px;
+	padding: 15px 25px 15px 40px;
 }
 
 #range {
 	display: none
+}
+
+#contact {
+	color: lightgray;
+	padding: 40px;
+	text-decoration: underline;
 }

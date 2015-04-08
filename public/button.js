@@ -6,7 +6,8 @@ var app = {
 		loading: $('#loading'),
 		counter: $('#counter'),
 		history: $('#history'),
-		flairColor: $('#flairColor')
+		flairColor: $('#flairColor'),
+		contact: $('#contact')
 	},
 	plot: undefined,
 	plotData: [],  // the drawn plot data - combines historyCompleteData + liveData
@@ -191,6 +192,12 @@ var app = {
 		this.elements.flairColor.change(function () {
 			var showFlair = $(this).is(":checked");
 			that.initGraph(showFlair);
+		});
+
+		// contact information
+		this.elements.contact.click(function(){
+			$(this).css('textDecoration', 'none');
+			$(this).html('OutOfBrain@gmail.com /u/OutOfBrain');
 		});
 	},
 
