@@ -4,12 +4,13 @@ use Devristo\Phpws\Messaging\WebSocketMessage;
 use Persistence\ButtonStoreCsv;
 use Persistence\ButtonStoreDb;
 use Persistence\ButtonStoreInterface;
+use Persistence\ButtonStoreLowestCsv;
 use React\EventLoop\Factory;
 
 require_once('vendor/autoload.php');
 
 class ButtonDaemon {
-	private $wsurl = 'wss://wss.redditmedia.com/thebutton?h=558d8918247c277d5bbfc2dbcda2a6b315e7acfa&e=1428194517';
+	private $wsurl = 'wss://wss.redditmedia.com/thebutton?h=31bb52133cdd645160bc9ae41d219257d577c956&e=1428614184';
 
 
 	public function __construct($wsurl) {
@@ -23,9 +24,13 @@ class ButtonDaemon {
 	/** @var ButtonStoreInterface */
 	private $buttonStoreDb;
 
+	/** @var ButtonStoreLowestCsv */
+	private $buttonStoreLowestCsv;
+
 	public function run() {
 		$this->buttonStoreDb = new ButtonStoreDb();
 		$this->buttonStoreCsv = new ButtonStoreCsv();
+		$this->buttonStoreLowestCsv = new ButtonStoreLowestCsv($this->buttonStoreCsv);
 
 		$loop = Factory::create();
 
@@ -60,6 +65,7 @@ class ButtonDaemon {
 
 		$this->buttonStoreDb->insertButton($now_timestamp, $participants, $seconds_left);
 		$this->buttonStoreCsv->insertButton($now_timestamp, $participants, $seconds_left);
+		$this->buttonStoreLowestCsv->insertButton($now_timestamp, $participants, $seconds_left);
 	}
 }
 

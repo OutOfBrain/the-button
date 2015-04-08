@@ -235,6 +235,20 @@ var app = {
 		this.plot = $.plot("#placeholder", [this.plotData], options);
 	},
 
+	loadLowestValue: function() {
+		var that = this;
+		$.ajax({
+			type: "GET",
+			url: "lowest",
+			dataType: "text",
+			success: function(data) {
+				// timestamp,value
+				var splitData = data.trim().split(/,/);
+				that.updateLowest(splitData[1], splitData[0]);
+			}
+		});
+	},
+
 	loadHistory: function() {
 		this.elements.loading.show();
 
@@ -258,7 +272,7 @@ var app = {
 					var now_timestamp = parseInt(elements[0]) * 1000;
 					var seconds_left = parseInt(elements[2]);
 					that.historyCompleteData.push([now_timestamp, seconds_left]);
-					that.updateLowest(seconds_left, now_timestamp);  // TODO
+					that.updateLowest(seconds_left, now_timestamp);
 				}
 				that.recalculateFilter(that.constFilterGroupTime);
 				that.toggleHistory(true);
@@ -271,6 +285,7 @@ var app = {
 		this.initGraph(false);
 		this.setupFlot();
 		this.setupUi();
+		this.loadLowestValue();
 		this.getNewUrl();
 	}
 };
