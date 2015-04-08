@@ -1,5 +1,13 @@
 
 var app = {
+	elements: {
+		lowestValue: $('#lowest'),
+		groupByRange: $("#groupByRange"),
+		loading: $('#loading'),
+		counter: $('#counter'),
+		history: $('#history'),
+		flairColor: $('#flairColor')
+	},
 	plot: undefined,
 	plotData: [],  // the drawn plot data - combines historyCompleteData + liveData
 	liveData: [],  // data loaded from websocket since opening page
@@ -8,11 +16,11 @@ var app = {
 	constFilterGroupTime: 60,  // only render the lowest data point every this many seconds
 	constLimitLiveViewDataPoints: 600,  // limit the live view to this many data points
 
-
 	lowestTime: 60,  // lowest found value
 	lowestDate: new Date(),  // lowest found date
 
 	flagShowHistory: true,  // flag to display history or not
+
 	/**
 	 * Redraw the graph.
 	 */
@@ -21,6 +29,7 @@ var app = {
 		this.plot.setupGrid();
 		this.plot.draw();
 	},
+
 	/**
 	 * Recalculate the plotData which consists of the history and the live data.
 	 * The prepended history is optional and en-/disabled with this function.
@@ -39,9 +48,8 @@ var app = {
 		if (value < this.lowestTime) {
 			this.lowestTime = value;
 			this.lowestDate = date;
-			var lowestSpan = $('#lowest');
-			lowestSpan.html(this.lowestTime + " seconds");
-			lowestSpan.prop('title', new Date(date).toLocaleString());
+			this.elements.lowestValue.html(this.lowestTime + " seconds");
+			this.elements.lowestValue.prop('title', new Date(date).toLocaleString());
 		}
 	},
 
@@ -58,7 +66,7 @@ var app = {
 		var seconds_left = data.payload.seconds_left;
 		var now_str = data.payload.now_str;
 
-		$('#counter').html(seconds_left);
+		that.elements.counter.html(seconds_left);
 
 		var ts = now_str.split('-');
 		var year = ts[0];
@@ -122,11 +130,7 @@ var app = {
 		};
 	},
 
-	start: function() {
-		var that = this;
-
-		this.initGraph(false);
-
+	setupFlot: function() {
 		$("#placeholder").bind("plothover", function (event, pos, item) {
 			var str = "(" + pos.x.toFixed(2) + ", " + pos.y.toFixed(2) + ")";
 			$("#hoverdata").text(str);
@@ -151,12 +155,19 @@ var app = {
 			"background-color": "#FAFAFA",
 			opacity: 0.80
 		}).appendTo("body");
+	},
+
+	start: function() {
+		var that = this;
+
+		this.initGraph(false);
+		this.setupFlot();
 
 		// slider code
-		$("#groupByRange").on("change mousemove", function () {
+		this.elements.groupByRange.on("change mousemove", function () {
 			$("#sliderValue").html($(this).val());
 		});
-		$("#groupByRange").on("mouseup", function () {
+		this.elements.groupByRange.on("mouseup", function () {
 			that.recalculateFilter($("#groupByRange").val());
 			that.toggleHistory(true);
 		});
@@ -185,12 +196,12 @@ var app = {
 				that.recalculateFilter(that.constFilterGroupTime);
 				that.toggleHistory(true);
 
-				$('#loading').hide();
+				that.elements.loading.hide();
 			}
 		});
 
 		// listen to history toggle change
-		$('#history').change(function () {
+		this.elements.history.change(function () {
 			if ($(this).is(":checked")) {
 				// with history
 				that.toggleHistory(true);
@@ -203,7 +214,7 @@ var app = {
 		});
 
 		// flair color toggle
-		$('#flairColor').change(function () {
+		this.elements.flairColor.change(function () {
 			var showFlair = $(this).is(":checked");
 			that.initGraph(showFlair);
 		});
