@@ -119,15 +119,17 @@ var app = {
 		// start the websocket connection
 		var webSocket = new WebSocket(url);
 		webSocket.onmessage = this.update;
-		webSocket.onerror = function () {
-			// try to refetch with backend provided ws url
-			$.get('getnewwsurl.php', function (data) {
-					if (data) {
-						that.initWebSocket(data);
-					}
-				}
-			);
-		};
+		webSocket.onerror = that.getNewUrl;
+	},
+
+	getNewUrl: function() {
+		var that = app;
+		// try to refetch with backend provided ws url
+		$.get('getnewwsurl.php', function (data) {
+			if (data) {
+				that.initWebSocket(data);
+			}
+		});
 	},
 
 	setupFlot: function() {
@@ -219,8 +221,7 @@ var app = {
 			that.initGraph(showFlair);
 		});
 
-		this.initWebSocket('wss://wss.redditmedia.com/thebutton?h=028c31feed150f7e2806cec3435f482e4c0e068c&e=1428514746');
-
+		this.getNewUrl();
 	},
 
 	initGraph: function(withFlair) {
