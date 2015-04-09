@@ -15,21 +15,17 @@ var app = {
 	plotData: [],  // the drawn plot data - combines historyCompleteData + liveData
 	liveData: [],  // data loaded from websocket since opening page
 	historyCompleteData: [],  // historic data from server
-	historyFilteredData: [],  // history data from server
+	historyFilteredData: [],  // filtered history data
 	constFilterGroupTime: 60,  // only render the lowest data point every this many seconds
-	constLimitLiveViewDataPoints: 600,  // limit the live view to this many data points
 
 	lowestTime: 60,  // lowest found value
 	lowestDate: new Date(),  // lowest found date
-
-	flagShowHistory: true,  // flag to display history or not
 
 	/**
 	 * Recalculate the plotData which consists of the history and the live data.
 	 * The prepended history is optional and en-/disabled with this function.
 	 */
 	toggleHistory: function(historyOn) {
-		this.flagShowHistory = historyOn;  // just used to track history toggle state
 		if (historyOn) {
 			this.plotData = [].concat(this.historyFilteredData, this.liveData);
 		} else {
@@ -55,12 +51,6 @@ var app = {
 		that.elements.counter.html(seconds_left);
 
 		that.liveData.push([now_timestamp, seconds_left]);
-		if (!that.flagShowHistory) {
-			// special case that we are just looking at the live view - limit the data points in that case
-			if (that.plotData.length > that.constLimitLiveViewDataPoints) {
-				that.plotData.shift();
-			}
-		}
 		that.plotData.push([now_timestamp, seconds_left]);
 		that.updateLowest(seconds_left, now_timestamp);
 		that.plot.refreshPlot(that.plotData);
