@@ -11,7 +11,7 @@ use React\EventLoop\Factory;
 require_once('vendor/autoload.php');
 
 class ButtonDaemon {
-	private $wsurl = 'wss://wss.redditmedia.com/thebutton?h=31bb52133cdd645160bc9ae41d219257d577c956&e=1428614184';
+	private $wsurl = 'wss://wss.redditmedia.com/thebutton?h=e28c9d664c64161b847ab937939997f026dbe7a8&e=1428703432';
 
 
 	public function __construct($wsurl) {
