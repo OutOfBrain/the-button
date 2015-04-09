@@ -1,6 +1,7 @@
 <?php
 
 use Devristo\Phpws\Messaging\WebSocketMessage;
+use Persistence\ButtonStoreClicksCsv;
 use Persistence\ButtonStoreCsv;
 use Persistence\ButtonStoreDb;
 use Persistence\ButtonStoreInterface;
@@ -26,11 +27,14 @@ class ButtonDaemon {
 
 	/** @var ButtonStoreLowestCsv */
 	private $buttonStoreLowestCsv;
+	/** @var ButtonStoreClicksCsv */
+	private $buttonStoreClicksCsv;
 
 	public function run() {
 		$this->buttonStoreDb = new ButtonStoreDb();
 		$this->buttonStoreCsv = new ButtonStoreCsv();
 		$this->buttonStoreLowestCsv = new ButtonStoreLowestCsv($this->buttonStoreCsv);
+		$this->buttonStoreClicksCsv = new ButtonStoreClicksCsv($this->buttonStoreCsv);
 
 		$loop = Factory::create();
 
@@ -66,6 +70,7 @@ class ButtonDaemon {
 		$this->buttonStoreDb->insertButton($now_timestamp, $participants, $seconds_left);
 		$this->buttonStoreCsv->insertButton($now_timestamp, $participants, $seconds_left);
 		$this->buttonStoreLowestCsv->insertButton($now_timestamp, $participants, $seconds_left);
+		$this->buttonStoreClicksCsv->insertButton($now_timestamp, $participants, $seconds_left);
 	}
 }
 
