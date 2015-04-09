@@ -36,17 +36,45 @@ var app = {
 	},
 
 	/**
-	 * Called on websocket receive live data.
+	 * Called on web socket receive live data.
 	 */
-	callbackUpdate: function(now_timestamp, seconds_left) {
+	callbackUpdate: function(nowTimestamp, participants, secondsLeft) {
 		var that = app;
-		that.ui.updateCounter(seconds_left);
+		that.ui.updateCounter(secondsLeft);
 
-		that.liveData.push([now_timestamp, seconds_left]);
-		that.plotData.push([now_timestamp, seconds_left]);
-		that.updateLowest(seconds_left, now_timestamp);
+		if (participants != that.currentParticipants) {
+			// there was a click
+			that.currentParticipants = participants;
+			that.lastPointUpdate(that.currentSecondsLeft);
+			++that.currentIndex;
+			that.plotData.push([that.currentIndex, 60 - secondsLeft]);
+		} else {
+			that.lastPointUpdate(that.currentSecondsLeft);
+		}
+
+		that.currentTimestamp = nowTimestamp;
+		that.currentSecondsLeft = secondsLeft;
+
+		//that.liveData.push([now_timestamp, seconds_left]);
+		//that.updateLowest(seconds_left, now_timestamp);
+
+		//that.plotData.push([now_timestamp, seconds_left]);
 		that.plot.refreshPlot(that.plotData);
 	},
+	lastPointUpdate: function(value) {
+		if (value == undefined) {
+			return;
+		}
+		console.log('at ' + this.currentIndex + ' update ' + value);
+		this.plotData.pop();
+		this.plotData.push([this.currentIndex, 60 - value]);
+	},
+
+	currentIndex: 0,
+
+	currentTime: undefined,
+	currentSecondsLeft: undefined,
+	currentParticipants: undefined,
 
 
 	/**

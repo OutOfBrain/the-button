@@ -31,6 +31,10 @@ var plot = {
 		// setup plot
 		var options = {
 			series: {
+				bars: {
+					show: true
+					//barWidth: 1000
+				},
 				shadowSize: 0
 			},
 			grid: {
@@ -42,9 +46,12 @@ var plot = {
 				max: 60
 			},
 			xaxis: {
-				mode: "time",
-				timezone: "browser",
-				timeformat: "%Y-%m-%d %H:%m:%S"
+				//mode: "time",
+				//timezone: "browser",
+				//timeformat: "%Y-%m-%d %H:%m:%S"
+				tickFormatter: function() {
+					return "";
+				}
 			},
 			zoom: {
 				interactive: true

@@ -28,6 +28,7 @@ var ws = {
 		var data = JSON.parse(event.data);
 		var seconds_left = data.payload.seconds_left;
 		var now_str = data.payload.now_str;
+		var participants = parseInt(data.payload.participants_text.replace(',', ''));
 
 		var ts = now_str.split('-');
 		var year = ts[0];
@@ -38,8 +39,9 @@ var ws = {
 		var second = ts[5];
 		var now_timestamp = Date.parse(year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second + ' UTC');
 
+
 		if (ws.updateCallback) {
-			ws.updateCallback(now_timestamp, seconds_left);
+			ws.updateCallback(now_timestamp, participants, seconds_left);
 		}
 	}
 };
