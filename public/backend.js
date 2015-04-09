@@ -2,7 +2,7 @@ var backend = {
 	loadAll: function(callback) {
 		$.ajax({
 			type: "GET",
-			url: "button.csv",
+			url: "button_clicks.csv",
 			dataType: "text",
 			success: function (data) {
 				var lines = data.split(/\n/);

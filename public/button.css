@@ -29,8 +29,8 @@ body {
 	width:400px;
 }
 
-#dataAvailable, #codeAvailable {
-	padding: 15px 25px 15px 40px;
+.dataAvailable, #codeAvailable {
+	padding: 8px 25px 15px 40px;
 }
 
 #range {
