@@ -17,7 +17,7 @@ var ws = {
 		// start the websocket connection
 		var webSocket = new WebSocket(url);
 		webSocket.onmessage = ws.onMessage;
-		webSocket.onerror = ws.init()
+		webSocket.onerror = ws.init;
 	},
 
 	onMessage: function(event) {
