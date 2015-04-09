@@ -118,10 +118,17 @@ var app = {
 		app.plot.refreshPlot(app.plotData);
 	},
 
+	callbackBarsToggle: function(on) {
+		app.toggleHistory(false);
+		app.plot.toggleBars(on);
+		app.plot.refreshPlot(app.plot);
+	},
+
 	start: function() {
 		this.ui.callbackSlider = this.recalculateFilter;
 		this.ui.callbackHistoryToggle = this.callbackHistoryToggle;
 		this.ui.callbackFlairToggle = this.callbackFlairToggle;
+		this.ui.callbackBarsToggle = this.callbackBarsToggle;
 		this.ui.init();
 		this.ws.init(this.callbackUpdate);
 		this.plot.init(false);

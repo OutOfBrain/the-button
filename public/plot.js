@@ -31,6 +31,10 @@ var plot = {
 		// setup plot
 		var options = {
 			series: {
+				bars: {
+					show: false,
+					barWidth: 1000
+				},
 				shadowSize: 0
 			},
 			grid: {
@@ -71,6 +75,11 @@ var plot = {
 		} else {
 			options.series.threshold = [];
 		}
+	},
+
+	toggleBars: function(on) {
+		var options = this.plot.getOptions();
+		options.series.bars.show = on;
 	},
 
 	/**

@@ -5,11 +5,13 @@ var ui = {
 	history: $('#history'),
 	groupByRange: $("#groupByRange"),
 	flairColor: $('#flairColor'),
+	barsToggle: $('#bars'),
 	contact: $('#contact'),
 
 	callbackSlider: undefined,
 	callbackHistoryToggle: undefined,
 	callbackFlairToggle: undefined,
+	callbackBarsToggle: undefined,
 
 	init: function() {
 		var that = this;
@@ -31,6 +33,11 @@ var ui = {
 		// flair color toggle
 		this.flairColor.change(function () {
 			that.callbackFlairToggle($(this).is(":checked"));
+		});
+
+		// bars toggle
+		this.barsToggle.change(function() {
+			that.callbackBarsToggle($(this).is(":checked"));
 		});
 
 		// contact information
