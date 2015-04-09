@@ -2,16 +2,8 @@
 var app = {
 	plot: plot,
 	ws: ws,
+	ui: ui,
 
-	elements: {
-		lowestValue: $('#lowest'),
-		groupByRange: $("#groupByRange"),
-		loading: $('#loading'),
-		counter: $('#counter'),
-		history: $('#history'),
-		flairColor: $('#flairColor'),
-		contact: $('#contact')
-	},
 	plotData: [],  // the drawn plot data - combines historyCompleteData + liveData
 	liveData: [],  // data loaded from websocket since opening page
 	historyCompleteData: [],  // historic data from server
@@ -38,17 +30,16 @@ var app = {
 		if (value < this.lowestTime) {
 			this.lowestTime = value;
 			this.lowestDate = date;
-			this.elements.lowestValue.html(this.lowestTime + " seconds");
-			this.elements.lowestValue.prop('title', new Date(date).toLocaleString());
+			this.ui.updateLowest(this.lowestTime, this.lowestDate);
 		}
 	},
 
 	/**
 	 * Called on websocket receive live data.
 	 */
-	update: function(now_timestamp, seconds_left) {
+	callbackUpdate: function(now_timestamp, seconds_left) {
 		var that = app;
-		that.elements.counter.html(seconds_left);
+		that.ui.updateCounter(seconds_left);
 
 		that.liveData.push([now_timestamp, seconds_left]);
 		that.plotData.push([now_timestamp, seconds_left]);
@@ -64,63 +55,21 @@ var app = {
 	 * - just call toggleHistory(true) after to force setting data and redraw.
 	 */
 	recalculateFilter: function(groupBySeconds) {
-		this.historyFilteredData = [];
-		var len = this.historyCompleteData.length;
-		var min_now_timestamp = this.historyCompleteData[0][0];
+		app.historyFilteredData = [];
+		var len = app.historyCompleteData.length;
+		var min_now_timestamp = app.historyCompleteData[0][0];
 		var min_seconds_left = this.historyCompleteData[0][1];
 		for (var i = 0; i < len; ++i) {
 			if (i % groupBySeconds == 0) {
 				// timeframe over - found our minimum. reset min seconds to 60
-				this.historyFilteredData.push([min_now_timestamp, min_seconds_left]);
+				app.historyFilteredData.push([min_now_timestamp, min_seconds_left]);
 				min_seconds_left = 60;
-			} else if (this.historyCompleteData[i][1] < min_seconds_left) {
+			} else if (app.historyCompleteData[i][1] < min_seconds_left) {
 				// found lover second value in time frame - store plus timestamp
-				min_seconds_left = this.historyCompleteData[i][1];
-				min_now_timestamp = this.historyCompleteData[i][0];
+				min_seconds_left = app.historyCompleteData[i][1];
+				min_now_timestamp = app.historyCompleteData[i][0];
 			}
 		}
-	},
-
-	setupUi: function() {
-		var that = this;
-		// slider code
-		this.elements.groupByRange.on("change mousemove", function () {
-			$("#sliderValue").html($(this).val());
-		});
-		this.elements.groupByRange.on("mouseup", function () {
-			that.recalculateFilter($("#groupByRange").val());
-			that.toggleHistory(true);
-		});
-
-		// listen to history toggle change
-		this.elements.history.change(function () {
-			if ($(this).is(":checked")) {
-				// with history - load if not present yet
-				if (that.historyCompleteData.length === 0) {
-					that.loadHistory();
-				} else {
-					that.toggleHistory(true);
-				}
-				$("#range").show();
-			} else {
-				// without history
-				that.toggleHistory(false);
-				$("#range").hide();
-			}
-		});
-
-		// flair color toggle
-		this.elements.flairColor.change(function () {
-			var showFlair = $(this).is(":checked");
-			that.plot.updateOptions(showFlair);
-			that.plot.refreshPlot(that.plotData);
-		});
-
-		// contact information
-		this.elements.contact.click(function(){
-			$(this).css('textDecoration', 'none');
-			$(this).html('OutOfBrain@gmail.com /u/OutOfBrain');
-		});
 	},
 
 	loadLowestValue: function() {
@@ -138,7 +87,7 @@ var app = {
 	},
 
 	loadHistory: function() {
-		this.elements.loading.show();
+		this.ui.loadingShow();
 
 		var that = this;
 		// prepend csv data to the plot
@@ -164,15 +113,30 @@ var app = {
 				}
 				that.recalculateFilter(that.constFilterGroupTime);
 				that.toggleHistory(true);
-				that.elements.loading.hide();
+				that.ui.loadingHide();
 			}
 		});
 	},
 
+	callbackHistoryToggle: function(on) {
+		if (on && app.historyCompleteData.length === 0) {
+			app.loadHistory();
+		}
+		app.toggleHistory(on);
+	},
+
+	callbackFlairToggle: function(on) {
+		app.plot.updateOptions(on);
+		app.plot.refreshPlot(app.plotData);
+	},
+
 	start: function() {
-		this.ws.init(this.update);
+		this.ui.callbackSlider = this.recalculateFilter;
+		this.ui.callbackHistoryToggle = this.callbackHistoryToggle;
+		this.ui.callbackFlairToggle = this.callbackFlairToggle;
+		this.ui.init();
+		this.ws.init(this.callbackUpdate);
 		this.plot.init(false);
-		this.setupUi();
 		this.loadLowestValue();
 	}
 };
