@@ -1,6 +1,8 @@
 
 var app = {
 	plot: plot,
+	ws: ws,
+
 	elements: {
 		lowestValue: $('#lowest'),
 		groupByRange: $("#groupByRange"),
@@ -106,24 +108,6 @@ var app = {
 		}
 	},
 
-	initWebSocket: function(url) {
-		var that = this;
-		// start the websocket connection
-		var webSocket = new WebSocket(url);
-		webSocket.onmessage = this.update;
-		webSocket.onerror = that.getNewUrl;
-	},
-
-	getNewUrl: function() {
-		var that = app;
-		// try to refetch with backend provided ws url
-		$.get('getnewwsurl.php', function (data) {
-			if (data) {
-				that.initWebSocket(data);
-			}
-		});
-	},
-
 	setupUi: function() {
 		var that = this;
 		// slider code
@@ -213,10 +197,10 @@ var app = {
 	},
 
 	start: function() {
+		this.ws.init(this.update);
 		this.plot.init(false);
 		this.setupUi();
 		this.loadLowestValue();
-		this.getNewUrl();
 	}
 };
 
