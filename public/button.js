@@ -56,19 +56,24 @@ var app = {
 	 * - just call toggleHistory(true) after to force setting data and redraw.
 	 */
 	recalculateFilter: function(groupBySeconds) {
-		app.historyFilteredData = [];
-		var len = app.historyCompleteData.length;
-		var min_now_timestamp = app.historyCompleteData[0][0];
-		var min_seconds_left = app.historyCompleteData[0][1];
-		for (var i = 0; i < len; ++i) {
-			if (i % groupBySeconds == 0) {
-				// timeframe over - found our minimum. reset min seconds to 60
-				app.historyFilteredData.push([min_now_timestamp, min_seconds_left]);
-				min_seconds_left = 60;
-			} else if (app.historyCompleteData[i][1] < min_seconds_left) {
-				// found lover second value in time frame - store plus timestamp
-				min_seconds_left = app.historyCompleteData[i][1];
-				min_now_timestamp = app.historyCompleteData[i][0];
+		if (groupBySeconds == 1) {
+			// shortcut for filter
+			app.historyFilteredData = app.historyCompleteData;
+		} else {
+			app.historyFilteredData = [];
+			var len = app.historyCompleteData.length;
+			var min_now_timestamp = app.historyCompleteData[0][0];
+			var min_seconds_left = app.historyCompleteData[0][1];
+			for (var i = 0; i < len; ++i) {
+				if (i % groupBySeconds == 0) {
+					// timeframe over - found our minimum. reset min seconds to 60
+					app.historyFilteredData.push([min_now_timestamp, min_seconds_left]);
+					min_seconds_left = 60;
+				} else if (app.historyCompleteData[i][1] < min_seconds_left) {
+					// found lover second value in time frame - store plus timestamp
+					min_seconds_left = app.historyCompleteData[i][1];
+					min_now_timestamp = app.historyCompleteData[i][0];
+				}
 			}
 		}
 
