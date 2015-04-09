@@ -1,5 +1,6 @@
 
 var app = {
+	plot: plot,
 	elements: {
 		lowestValue: $('#lowest'),
 		groupByRange: $("#groupByRange"),
@@ -9,7 +10,6 @@ var app = {
 		flairColor: $('#flairColor'),
 		contact: $('#contact')
 	},
-	plot: undefined,
 	plotData: [],  // the drawn plot data - combines historyCompleteData + liveData
 	liveData: [],  // data loaded from websocket since opening page
 	historyCompleteData: [],  // historic data from server
@@ -23,15 +23,6 @@ var app = {
 	flagShowHistory: true,  // flag to display history or not
 
 	/**
-	 * Redraw the graph.
-	 */
-	refreshPlot: function() {
-		this.plot.setData([this.plotData]);
-		this.plot.setupGrid();
-		this.plot.draw();
-	},
-
-	/**
 	 * Recalculate the plotData which consists of the history and the live data.
 	 * The prepended history is optional and en-/disabled with this function.
 	 */
@@ -42,7 +33,7 @@ var app = {
 		} else {
 			this.plotData = this.liveData;
 		}
-		this.refreshPlot();
+		this.plot.refreshPlot(this.plotData);
 	},
 
 	updateLowest: function(value, date) {
@@ -87,7 +78,7 @@ var app = {
 		}
 		that.plotData.push([now_timestamp, seconds_left]);
 		that.updateLowest(seconds_left, now_timestamp);
-		that.refreshPlot();
+		that.plot.refreshPlot(that.plotData);
 	},
 
 
@@ -133,33 +124,6 @@ var app = {
 		});
 	},
 
-	setupFlot: function() {
-		$("#placeholder").bind("plothover", function (event, pos, item) {
-			var str = "(" + pos.x.toFixed(2) + ", " + pos.y.toFixed(2) + ")";
-			$("#hoverdata").text(str);
-
-			if (item) {
-				var x = item.datapoint[0];
-				var y = item.datapoint[1];
-				var date = new Date(x);
-
-				$("#tooltip").html(y + '<br>' + date.toLocaleString())
-					.css({top: item.pageY + 5, left: item.pageX - 23})
-					.fadeIn(200);
-			} else {
-				$("#tooltip").hide();
-			}
-		});
-		$("<div id='tooltip'></div>").css({
-			position: "absolute",
-			display: "none",
-			border: "1px solid #fdd",
-			padding: "2px",
-			"background-color": "#FAFAFA",
-			opacity: 0.80
-		}).appendTo("body");
-	},
-
 	setupUi: function() {
 		var that = this;
 		// slider code
@@ -191,7 +155,8 @@ var app = {
 		// flair color toggle
 		this.elements.flairColor.change(function () {
 			var showFlair = $(this).is(":checked");
-			that.initGraph(showFlair);
+			that.plot.updateOptions(showFlair);
+			that.plot.refreshPlot(that.plotData);
 		});
 
 		// contact information
@@ -199,47 +164,6 @@ var app = {
 			$(this).css('textDecoration', 'none');
 			$(this).html('OutOfBrain@gmail.com /u/OutOfBrain');
 		});
-	},
-
-	initGraph: function(withFlair) {
-		// setup plot
-		var options = {
-			series: {
-				shadowSize: 0
-			},
-			grid: {
-				hoverable: true,
-				clickable: true
-			},
-			yaxis: {
-				min: 0,
-				max: 60
-			},
-			xaxis: {
-				mode: "time",
-				timezone: "browser",
-				timeformat: "%Y-%m-%d %H:%m:%S"
-			},
-			zoom: {
-				interactive: true
-			},
-			pan: {
-				interactive: true
-			}
-		};
-
-		if (withFlair) {
-			options.series.threshold = [
-				{below: 60, color: "#820080"},
-				{below: 51, color: "#0083C7"},
-				{below: 41, color: "#02BE01"},
-				{below: 31, color: "#E5D900"},
-				{below: 21, color: "#E59500"},
-				{below: 11, color: "#E50000"}
-			]
-		}
-
-		this.plot = $.plot("#placeholder", [this.plotData], options);
 	},
 
 	loadLowestValue: function() {
@@ -289,8 +213,7 @@ var app = {
 	},
 
 	start: function() {
-		this.initGraph(false);
-		this.setupFlot();
+		this.plot.init(false);
 		this.setupUi();
 		this.loadLowestValue();
 		this.getNewUrl();
