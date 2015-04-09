@@ -58,7 +58,7 @@ var app = {
 		app.historyFilteredData = [];
 		var len = app.historyCompleteData.length;
 		var min_now_timestamp = app.historyCompleteData[0][0];
-		var min_seconds_left = this.historyCompleteData[0][1];
+		var min_seconds_left = app.historyCompleteData[0][1];
 		for (var i = 0; i < len; ++i) {
 			if (i % groupBySeconds == 0) {
 				// timeframe over - found our minimum. reset min seconds to 60
@@ -70,6 +70,8 @@ var app = {
 				min_now_timestamp = app.historyCompleteData[i][0];
 			}
 		}
+
+		app.toggleHistory(true);
 	},
 
 	loadLowestValue: function() {
@@ -137,6 +139,7 @@ var app = {
 		this.ui.init();
 		this.ws.init(this.callbackUpdate);
 		this.plot.init(false);
+		this.plot.updateOptions(true);
 		this.loadLowestValue();
 	}
 };
