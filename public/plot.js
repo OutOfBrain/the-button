@@ -61,7 +61,7 @@ var plot = {
 		var options = this.plot.getOptions();
 		if (withFlair) {
 			options.series.threshold = [
-				{below: 60, color: "#820080"},
+				{below: 61, color: "#820080"},
 				{below: 51, color: "#0083C7"},
 				{below: 41, color: "#02BE01"},
 				{below: 31, color: "#E5D900"},
