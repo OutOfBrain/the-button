@@ -3,6 +3,7 @@ var app = {
 	plot: plot,
 	ws: ws,
 	ui: ui,
+	backend: backend,
 
 	plotData: [],  // the drawn plot data - combines historyCompleteData + liveData
 	liveData: [],  // data loaded from websocket since opening page
@@ -74,50 +75,30 @@ var app = {
 		app.toggleHistory(true);
 	},
 
-	loadLowestValue: function() {
-		var that = this;
-		$.ajax({
-			type: "GET",
-			url: "lowest",
-			dataType: "text",
-			success: function(data) {
-				// timestamp,value
-				var splitData = data.trim().split(/,/);
-				that.updateLowest(splitData[1], splitData[0]);
-			}
-		});
+	callbackLoadedLowestValue: function(line) {
+		app.updateLowest(line[1], line[0]);
+	},
+
+	callbackHistoryAll: function(lines) {
+		var len = lines.length;
+		var elements = [];
+		for (var i = 0; i < len; ++i) {
+			elements = lines[i].split(/,/);
+
+			// * 1000 since milliseconds are used
+			var now_timestamp = parseInt(elements[0]) * 1000;
+			var seconds_left = parseInt(elements[2]);
+			app.historyCompleteData.push([now_timestamp, seconds_left]);
+			app.updateLowest(seconds_left, now_timestamp);
+		}
+		app.recalculateFilter(app.constFilterGroupTime);
+		app.toggleHistory(true);
+		app.ui.loadingHide();
 	},
 
 	loadHistory: function() {
-		this.ui.loadingShow();
-
-		var that = this;
-		// prepend csv data to the plot
-		$.ajax({
-			type: "GET",
-			url: "button.csv",
-			dataType: "text",
-			success: function (data) {
-				var lines = data.split(/\n/);
-				lines.shift();  // remove header
-				lines.pop();  // remove last line - is empty
-
-				var len = lines.length;
-				var elements = [];
-				for (var i = 0; i < len; ++i) {
-					elements = lines[i].split(/,/);
-
-					// * 1000 since milliseconds are used
-					var now_timestamp = parseInt(elements[0]) * 1000;
-					var seconds_left = parseInt(elements[2]);
-					that.historyCompleteData.push([now_timestamp, seconds_left]);
-					that.updateLowest(seconds_left, now_timestamp);
-				}
-				that.recalculateFilter(that.constFilterGroupTime);
-				that.toggleHistory(true);
-				that.ui.loadingHide();
-			}
-		});
+		app.ui.loadingShow();
+		app.backend.loadAll(app.callbackHistoryAll);
 	},
 
 	callbackHistoryToggle: function(on) {
@@ -140,7 +121,7 @@ var app = {
 		this.ws.init(this.callbackUpdate);
 		this.plot.init(false);
 		this.plot.updateOptions(true);
-		this.loadLowestValue();
+		this.backend.loadLowestValue(this.callbackLoadedLowestValue);
 	}
 };
 
