@@ -27,11 +27,11 @@ var app = {
 		this.plot.refreshPlot(this.plotData);
 	},
 
-	updateLowest: function(value, date) {
+	updateLowest: function (date, value) {
 		if (value < this.lowestTime) {
 			this.lowestTime = value;
 			this.lowestDate = date;
-			this.ui.updateLowest(this.lowestTime, this.lowestDate);
+			this.ui.updateLowest(this.lowestDate, this.lowestTime);
 		}
 	},
 
@@ -44,7 +44,7 @@ var app = {
 
 		that.liveData.push([now_timestamp, seconds_left]);
 		that.plotData.push([now_timestamp, seconds_left]);
-		that.updateLowest(seconds_left, now_timestamp);
+		that.updateLowest(now_timestamp, seconds_left);
 		that.plot.refreshPlot(that.plotData);
 	},
 
@@ -81,7 +81,7 @@ var app = {
 	},
 
 	callbackLoadedLowestValue: function(line) {
-		app.updateLowest(line[1], line[0]);
+		app.updateLowest(line[0], line[1]);
 	},
 
 	callbackHistoryAll: function(lines) {
@@ -94,7 +94,7 @@ var app = {
 			var now_timestamp = parseInt(elements[0]) * 1000;
 			var seconds_left = parseInt(elements[2]);
 			app.historyCompleteData.push([now_timestamp, seconds_left]);
-			app.updateLowest(seconds_left, now_timestamp);
+			app.updateLowest(now_timestamp, seconds_left);
 		}
 		app.recalculateFilter(app.constFilterGroupTime);
 		app.toggleHistory(true);

@@ -47,7 +47,7 @@ var ui = {
 		});
 	},
 
-	updateLowest: function(lowestTime, lowestDate) {
+	updateLowest: function(lowestDate, lowestTime) {
 		this.lowestValue.html(lowestTime + " seconds");
 		this.lowestValue.prop('title', new Date(lowestDate).toLocaleString());
 	},
