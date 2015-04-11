@@ -8,7 +8,7 @@ var plot = {
 
 			if (item) {
 				var x = item.datapoint[0];
-				var y = item.datapoint[1];
+				var y = parseInt(item.datapoint[1]);
 				var date = new Date(x);
 
 				$("#tooltip").html(y + '<br>' + date.toLocaleString())
@@ -65,12 +65,12 @@ var plot = {
 		var options = this.plot.getOptions();
 		if (withFlair) {
 			options.series.threshold = [
-				{below: 61.5, color: "#820080"},
-				{below: 51.5, color: "#0083C7"},
-				{below: 41.5, color: "#02BE01"},
-				{below: 31.5, color: "#E5D900"},
-				{below: 21.5, color: "#E59500"},
-				{below: 11.5, color: "#E50000"}
+				{below: 61.01, color: "#820080"},
+				{below: 51.01, color: "#0083C7"},
+				{below: 41.01, color: "#02BE01"},
+				{below: 31.01, color: "#E5D900"},
+				{below: 21.01, color: "#E59500"},
+				{below: 11.01, color: "#E50000"}
 			]
 		} else {
 			options.series.threshold = [];
