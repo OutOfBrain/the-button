@@ -81,7 +81,7 @@ var app = {
 	},
 
 	callbackLoadedLowestValue: function(line) {
-		app.updateLowest(line[0], line[1]);
+		app.updateLowest(line[0] * 1000, line[1]);
 	},
 
 	callbackHistoryAll: function(lines) {
@@ -94,7 +94,6 @@ var app = {
 			var now_timestamp = parseInt(elements[0]) * 1000;
 			var seconds_left = parseInt(elements[2]);
 			app.historyCompleteData.push([now_timestamp, seconds_left]);
-			app.updateLowest(now_timestamp, seconds_left);
 		}
 		app.recalculateFilter(app.constFilterGroupTime);
 		app.toggleHistory(true);
