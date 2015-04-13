@@ -1,7 +1,7 @@
 var plot = {
 	plot: undefined,
 
-	init: function(withFlair) {
+	init: function() {
 		$("#placeholder").bind("plothover", function (event, pos, item) {
 			var str = "(" + pos.x.toFixed(2) + ", " + pos.y.toFixed(2) + ")";
 			$("#hoverdata").text(str);

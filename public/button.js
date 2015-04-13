@@ -130,9 +130,10 @@ var app = {
 		this.ui.callbackBarsToggle = this.callbackBarsToggle;
 		this.ui.init();
 		this.ws.init(this.callbackUpdate);
-		this.plot.init(false);
+		this.plot.init();
 		this.plot.updateOptions(true);
 		this.backend.loadLowestValue(this.callbackLoadedLowestValue);
+		this.callbackHistoryToggle(true);
 	}
 };
 
