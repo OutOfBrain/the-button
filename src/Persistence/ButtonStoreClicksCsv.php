@@ -14,6 +14,9 @@ class ButtonStoreClicksCsv {
 	private $currentTimestamp = 0;
 	private $currentSecondsLeft = 60;
 
+	// drop clicks when time difference longer than this amount of seconds
+	private $threshold = 30;
+
 	public function __construct(ButtonStoreInterface $buttonStore) {
 		// write header, reset file
 		file_put_contents($this->csvName, $this->header.PHP_EOL);
@@ -27,7 +30,11 @@ class ButtonStoreClicksCsv {
 		if ($participants != $this->currentParticipants) {
 			// there was a click
 			$peopleClicking = $participants - $this->currentParticipants;
-			$this->write($this->currentTimestamp, $peopleClicking, $this->currentSecondsLeft);
+			if ($nowTimestamp - $this->currentTimestamp < $this->threshold) {
+				$this->write($this->currentTimestamp, $peopleClicking, $this->currentSecondsLeft);
+			} else {
+				echo("drop " . ($nowTimestamp - $this->currentTimestamp) . "\n");
+			}
 			$this->currentParticipants = $participants;
 		}
 
