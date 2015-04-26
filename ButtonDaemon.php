@@ -1,4 +1,5 @@
 <?php
+ini_set('memory_limit', '2G');
 
 use Devristo\Phpws\Messaging\WebSocketMessage;
 use Persistence\ButtonStoreClicksCsv;
@@ -11,7 +12,7 @@ use React\EventLoop\Factory;
 require_once('vendor/autoload.php');
 
 class ButtonDaemon {
-	private $wsurl = 'wss://wss.redditmedia.com/thebutton?h=e28c9d664c64161b847ab937939997f026dbe7a8&e=1428703432';
+	private $wsurl = 'wss://wss.redditmedia.com/thebutton?h=5c5639919df374a7ebd30b9b6f568a99ea5e9765&e=1430150352';
 
 
 	public function __construct($wsurl) {
@@ -35,6 +36,7 @@ class ButtonDaemon {
 		$this->buttonStoreCsv = new ButtonStoreCsv();
 		$this->buttonStoreLowestCsv = new ButtonStoreLowestCsv($this->buttonStoreCsv);
 		$this->buttonStoreClicksCsv = new ButtonStoreClicksCsv($this->buttonStoreCsv);
+		echo('init done' . PHP_EOL);
 
 		$loop = Factory::create();
 
@@ -66,6 +68,17 @@ class ButtonDaemon {
 		$minute = $ts[4];
 		$second = $ts[5];
 		$now_timestamp = strtotime("$year-$month-$day $hour:$minute:$second UTC");
+
+		// fix case of button downtime / end
+		if (!$now_timestamp) {
+			$now_timestamp = 0;
+		}
+		if (!$participants) {
+			$participants = 0;
+		}
+		if (!$seconds_left) {
+			$seconds_left = 0;
+		}
 
 		$this->buttonStoreDb->insertButton($now_timestamp, $participants, $seconds_left);
 		$this->buttonStoreCsv->insertButton($now_timestamp, $participants, $seconds_left);
