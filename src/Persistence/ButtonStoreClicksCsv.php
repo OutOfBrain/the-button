@@ -44,6 +44,10 @@ class ButtonStoreClicksCsv {
 
 	private function write($timestamp, $peopleClicking, $secondsLeft) {
 		if ($timestamp) {
+			// fix case of button downtime / end
+			if ($peopleClicking < 0) {
+				$peopleClicking = 0;
+			}
 			// not default 0 timestamp - happens with first entry
 			file_put_contents($this->csvName, "$timestamp,$peopleClicking,$secondsLeft".PHP_EOL, FILE_APPEND);
 		}
