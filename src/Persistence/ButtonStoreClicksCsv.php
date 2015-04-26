@@ -19,7 +19,7 @@ class ButtonStoreClicksCsv {
 
 	public function __construct(ButtonStoreInterface $buttonStore) {
 		// write header, reset file
-		file_put_contents($this->csvName, $this->header.PHP_EOL);
+		file_put_contents($this->csvName, $this->header . PHP_EOL);
 		foreach ($buttonStore->getAll() as $line) {
 			list($nowTimestamp, $participants, $secondsLeft) = $line;
 			$this->insertButton($nowTimestamp, $participants, $secondsLeft);
@@ -33,7 +33,7 @@ class ButtonStoreClicksCsv {
 			if ($nowTimestamp - $this->currentTimestamp < $this->threshold) {
 				$this->write($this->currentTimestamp, $peopleClicking, $this->currentSecondsLeft);
 			} else {
-				echo("drop " . ($nowTimestamp - $this->currentTimestamp) . "\n");
+				echo("drop " . ($nowTimestamp - $this->currentTimestamp) . PHP_EOL);
 			}
 			$this->currentParticipants = $participants;
 		}
@@ -49,7 +49,7 @@ class ButtonStoreClicksCsv {
 				$peopleClicking = 0;
 			}
 			// not default 0 timestamp - happens with first entry
-			file_put_contents($this->csvName, "$timestamp,$peopleClicking,$secondsLeft".PHP_EOL, FILE_APPEND);
+			file_put_contents($this->csvName, "$timestamp,$peopleClicking,$secondsLeft" . PHP_EOL, FILE_APPEND);
 		}
 	}
 }
