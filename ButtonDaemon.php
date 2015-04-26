@@ -32,6 +32,10 @@ class ButtonDaemon {
 	private $buttonStoreClicksCsv;
 
 	public function run() {
+		// add fixup in here instead of separate script to make repair
+		// as fast as possible - tied to the daemon
+		(new FixDowntimeData())->run();
+
 		$this->buttonStoreDb = new ButtonStoreDb();
 		$this->buttonStoreCsv = new ButtonStoreCsv();
 		$this->buttonStoreLowestCsv = new ButtonStoreLowestCsv($this->buttonStoreCsv);
